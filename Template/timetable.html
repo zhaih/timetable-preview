@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Timetable</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        var lPadding = 50
+        var uPadding = 50
+        var lWidth = 90
+        var lHeight = 32
+        var wordPadding = 6
+        var fontSize = 14
+        var courses = new Object();
+        $(document).ready(function(){
+            getCourses()
+        })
+        function loadClasses(tt){
+            for (course in courses){
+                if (courses[course].visible){
+                    courses[course].forEach(function(c){
+                        tt.addClass(c)
+                    })
+                }
+            }
+            drawTable(tt)
+        }
+        function parseClass(tempCourse){
+            for (course in tempCourse){
+                courses[course] = new Array()
+                courses[course].visible = false
+                var color = getRandomColor()
+                var subjectCode = course.substring(0,course.indexOf('_'))
+                tempCourse[course].forEach(function(c){
+                    var name = c.desc
+                    var start = parseInt(c.start.replace(":",""))
+                    var end = parseInt(c.fin.replace(":",""))
+                    var day = c.day
+                    var place = c.loc
+                    var newC = new _class(subjectCode,name,day,start,end,place,color)
+                    courses[course].push(newC)
+                })
+
+            }
+        }
+        function getCourses(){
+            $.get('/getCourses',function(data,status){
+                if (status != 'success'){
+                    console.log('ajax /getCourses failed')
+                    return
+                }
+                parseClass(data)
+                loadClasses(new timetable())
+                for (course in courses){
+                    var entry = document.createElement('input')
+                    var span = document.createElement('span')
+                    $(span)
+                        .html(course)
+                        .css("background",courses[course][0].color)
+                        .css("color",courses[course][0].fontColor)
+                    console.log(course)
+                    $(entry)
+                        .attr('type','checkbox')
+                        .attr('name','course')
+                        .attr('value',course)
+                        .click(function(){
+                            courses[$(this).attr('value')].visible
+                                = $(this).is(":checked")
+                            loadClasses(new timetable())
+                        })
+                    $('#courses').append(entry).append(span).append('<br>')
+                }
+            })
+        }
+        function drawTable(timetable){
+            // count the total rows first
+            var rows = timetable.rows()
+            var svgW = rows * lWidth + 2 * lPadding
+            var svgH = 16 * lHeight + 2 * uPadding // from 6am to 10pm, totally 16 hours, 40 per hour
+            $('#timetable').empty().attr('width',svgW).attr('height',svgH)
+            // 16 hours
+            for (var i = 0; i < 17; i++){
+                var hLine = document.createElementNS('http://www.w3.org/2000/svg','line')
+                $(hLine).
+                        attr('x1',lPadding).
+                        attr('x2',lPadding + rows * lWidth).
+                        attr('y1',uPadding + i * lHeight).
+                        attr('y2',uPadding + i * lHeight).
+                        attr('class','blackLine')
+                var label = document.createElementNS('http://www.w3.org/2000/svg','text')
+                label.innerHTML = (i + 6) + ':00'
+                $(label).
+                        attr('x',0).
+                        attr('y',uPadding + wordPadding + i * lHeight).
+                        attr('font-size','16').
+                        attr('font-family','Verdana')
+                $('#timetable').append(hLine)
+                $('#timetable').append(label)
+            }
+            // first vertical line
+            var vLine = document.createElementNS('http://www.w3.org/2000/svg','line')
+            $(vLine).
+                    attr('x1',lPadding).
+                    attr('x2',lPadding).
+                    attr('y1',uPadding).
+                    attr('y2',uPadding + 16 * lHeight).
+                    attr('class','blackLine')
+            $('#timetable').append(vLine)
+            // 5 days
+            var offset = 0
+            for (var i = 1; i < 6; i++){
+                offset += timetable[toWeekday(i)].length
+                var vLine = document.createElementNS('http://www.w3.org/2000/svg','line')
+                $(vLine).
+                        attr('x1',lPadding + offset * lWidth).
+                        attr('x2',lPadding + offset * lWidth).
+                        attr('y1',uPadding).
+                        attr('y2',uPadding + 16 * lHeight).
+                        attr('class','blackLine')
+                $('#timetable').append(vLine)
+            }
+            // draw the classes
+            offset = 0
+            var textGroup = new Array()
+            var rectGroup = new Array()
+            for (var i = 1; i < 6; i++){
+                var day = timetable[toWeekday(i)]
+                for (var j = 0; j < day.length; j++){
+                    for (k in day[j]){
+                        var e = day[j][k]
+                        var startH = Math.floor(e.start/100) - 6
+                        var startS = e.start%100
+                        var endH = Math.floor(e.end/100) - 6
+                        var endS = e.end%100
+                        var duration = (endH - startH) + (endS - startS)/60
+                        var vOffest = startH*lHeight + startS*lHeight/60
+                        var rect = document.createElementNS('http://www.w3.org/2000/svg','rect')
+                        var subCode = document.createElementNS('http://www.w3.org/2000/svg','text')
+                        var desc = document.createElementNS('http://www.w3.org/2000/svg','text')
+                        $(desc)
+                            .attr('x',lPadding + offset * lWidth)
+                            .attr('y',uPadding + vOffest + 2 * fontSize)
+                            .attr('font-size',fontSize)
+                            .attr('font-family','Verdana')
+                            .attr('fill',e.fontColor)
+                            .html(e.name)
+                            .click(classClick(e.subjectCode,e.name,e.place))
+                        $(subCode)
+                            .attr('x',lPadding + offset * lWidth)
+                            .attr('y',uPadding + vOffest + fontSize)
+                            .attr('font-size',fontSize)
+                            .attr('font-family','Verdana')
+                            .attr('fill',e.fontColor)
+                            .html(e.subjectCode)
+                            .click(classClick(e.subjectCode,e.name,e.place))
+                        $(rect)
+                            .attr('x',lPadding + offset * lWidth)
+                            .attr('y',uPadding + vOffest)
+                            .attr('width',lWidth)
+                            .attr('height',lHeight * duration)
+                            .attr('class','class')
+                            .css('fill',e.color)
+                            .click(classClick(e.subjectCode,e.name,e.place))
+                        textGroup.push(subCode)
+                        textGroup.push(desc)
+                        rectGroup.push(rect)
+                    }
+                    offset++
+                }
+            }
+            for (var i = 0; i < rectGroup.length; i++){
+                $("#timetable").append(rectGroup[i])
+            }
+            for (var i = 0; i < textGroup.length; i++){
+                $("#timetable").append(textGroup[i])
+            }
+        }
+        function touch(){
+            var page = document.createElement('html')
+            $.get('https://sws.unimelb.edu.au/2017/Reports/List.aspx?objects=COMP30027&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',function(data,status){
+                if (status != 'success'){
+                    console.log('ajax not successed')
+                    return
+                }
+                console.log(data);
+            })
+        }
+        function getRandomColor(){
+            var res = (Math.random()*0xffffff<<0).toString(16);
+            var zeros = ""
+            if (res.length != 6){
+                for (var i = 0; i < 6 - res.length; i++){
+                    zeros += "0"
+                }
+            }
+            return "#"+zeros+res
+        }
+        function timetable(){
+            this.Monday = new Array()
+            this.Monday[0] = new Array()
+            this.Tuesday = new Array()
+            this.Tuesday[0] = new Array()
+            this.Wednesday = new Array()
+            this.Wednesday[0] = new Array()
+            this.Thursday = new Array()
+            this.Thursday[0] = new Array()
+            this.Friday = new Array()
+            this.Friday[0] = new Array()
+            this.addClass = function(_class){
+                // first check if that day another class has already taken the place
+                var day = this[_class.day]
+                var row = 0
+                var slotExist = false
+                while (row < day.length){
+                    slotExist = true
+                    day[row].forEach(function(c){
+                        if ((c.start >= _class.start && c.start < _class.end)||
+                        (_class.start >= c.start && _class.start < c.end)){
+                            slotExist = false
+                        }
+                    })
+                    if (slotExist){
+                        break;
+                    }
+                    row++
+                }
+                if (row == day.length){
+                    day[row] = new Array()
+                }
+                    day[row].push(_class)
+            }
+            this.rows = function(){
+                return this.Monday.length + this.Tuesday.length + this.Wednesday.length +
+                        this.Thursday.length + this.Friday.length
+            }
+        }
+        function _class(subjectCode, name, day, start, end, place, color){
+            this.subjectCode = subjectCode
+            this.name = name
+            this.start = start
+            this.end = end
+            this.day = day
+            this.place = place
+            this.color = color
+            this.fontColor = antiColor(color)
+        }
+        function toWeekday(num){
+            switch(num){
+                case 1:
+                    return 'Monday'
+                case 2:
+                    return 'Tuesday'
+                case 3:
+                    return 'Wednesday'
+                case 4:
+                    return 'Thursday'
+                case 5:
+                    return 'Friday'
+            }
+        }
+        function antiColor(cString){
+            cString = cString.replace("#","")
+            var r = 255 - parseInt(cString.substring(0,2),16)
+            var g = 255 - parseInt(cString.substring(2,4),16)
+            var b = 255 - parseInt(cString.substring(4,6),16)
+            var rc = r.toString(16)
+            var gc = g.toString(16)
+            var bc = b.toString(16)
+            if (rc.length < 2){
+                rc = '0'+rc
+            }
+            if (gc.length < 2){
+                gc = '0'+gc
+            }
+            if (bc.length < 2){
+                bc = '0'+bc
+            }
+            return "#"+rc+gc+bc
+        }
+        // when user click the label or the block of the class
+        // show the infomation of the class on the right top of corner
+        function classClick(code,desc,loc){
+            return function(){
+                $("#subjectCode").text(code)
+                $("#desc").text(desc)
+                $("#loc").text(loc)
+            }
+        }
+    </script>
+    <style type="text/css">
+        .blackLine{
+            stroke : black;
+        }
+        body{
+            text-align: center;
+        }
+        .class{
+            stroke-width:0.5;
+            stroke: white;
+        }
+    </style>
+</head>
+<body>
+    <div style="float:left">
+        <form id="courses" style="text-align:left"></form>
+    </div>
+    <div style="float:left;text-align:left" id = "classSpec">
+        subjectCode:<span id = "subjectCode"></span><br>
+        Description:<span id = "desc"></span><br>
+        Location:<span id = "loc"></span><br>
+    </div>
+    <div>
+        <svg id="timetable">
+        </svg>
+    </div>
+</body>
+</html>
