@@ -1,0 +1,10 @@
+.blackLine{
+    stroke : black;
+}
+body{
+    text-align: center;
+}
+.class{
+    stroke-width:0.5;
+    stroke: white;
+}

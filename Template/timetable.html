@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Timetable</title>
     <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/timetable.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css" charset="utf-8">
     <script type="text/javascript">
         var lPadding = 50
         var uPadding = 50
@@ -15,6 +18,8 @@
         $(document).ready(function(){
             getCourses()
         })
+        // given a timetable, load all classes from courses
+        // and draw the timetable
         function loadClasses(tt){
             for (course in courses){
                 if (courses[course].visible){
@@ -25,6 +30,8 @@
             }
             drawTable(tt)
         }
+        // parse the classes get from server to the right
+        // class used here
         function parseClass(tempCourse){
             for (course in tempCourse){
                 courses[course] = new Array()
@@ -43,6 +50,8 @@
 
             }
         }
+        // get the courses from the server and then display it
+        // in the left up corner
         function getCourses(){
             $.get('/getCourses',function(data,status){
                 if (status != 'success'){
@@ -72,6 +81,7 @@
                 }
             })
         }
+        // draw the given timetable
         function drawTable(timetable){
             // count the total rows first
             var rows = timetable.rows()
@@ -175,108 +185,6 @@
                 $("#timetable").append(textGroup[i])
             }
         }
-        function touch(){
-            var page = document.createElement('html')
-            $.get('https://sws.unimelb.edu.au/2017/Reports/List.aspx?objects=COMP30027&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',function(data,status){
-                if (status != 'success'){
-                    console.log('ajax not successed')
-                    return
-                }
-                console.log(data);
-            })
-        }
-        function getRandomColor(){
-            var res = (Math.random()*0xffffff<<0).toString(16);
-            var zeros = ""
-            if (res.length != 6){
-                for (var i = 0; i < 6 - res.length; i++){
-                    zeros += "0"
-                }
-            }
-            return "#"+zeros+res
-        }
-        function timetable(){
-            this.Monday = new Array()
-            this.Monday[0] = new Array()
-            this.Tuesday = new Array()
-            this.Tuesday[0] = new Array()
-            this.Wednesday = new Array()
-            this.Wednesday[0] = new Array()
-            this.Thursday = new Array()
-            this.Thursday[0] = new Array()
-            this.Friday = new Array()
-            this.Friday[0] = new Array()
-            this.addClass = function(_class){
-                // first check if that day another class has already taken the place
-                var day = this[_class.day]
-                var row = 0
-                var slotExist = false
-                while (row < day.length){
-                    slotExist = true
-                    day[row].forEach(function(c){
-                        if ((c.start >= _class.start && c.start < _class.end)||
-                        (_class.start >= c.start && _class.start < c.end)){
-                            slotExist = false
-                        }
-                    })
-                    if (slotExist){
-                        break;
-                    }
-                    row++
-                }
-                if (row == day.length){
-                    day[row] = new Array()
-                }
-                    day[row].push(_class)
-            }
-            this.rows = function(){
-                return this.Monday.length + this.Tuesday.length + this.Wednesday.length +
-                        this.Thursday.length + this.Friday.length
-            }
-        }
-        function _class(subjectCode, name, day, start, end, place, color){
-            this.subjectCode = subjectCode
-            this.name = name
-            this.start = start
-            this.end = end
-            this.day = day
-            this.place = place
-            this.color = color
-            this.fontColor = antiColor(color)
-        }
-        function toWeekday(num){
-            switch(num){
-                case 1:
-                    return 'Monday'
-                case 2:
-                    return 'Tuesday'
-                case 3:
-                    return 'Wednesday'
-                case 4:
-                    return 'Thursday'
-                case 5:
-                    return 'Friday'
-            }
-        }
-        function antiColor(cString){
-            cString = cString.replace("#","")
-            var r = 255 - parseInt(cString.substring(0,2),16)
-            var g = 255 - parseInt(cString.substring(2,4),16)
-            var b = 255 - parseInt(cString.substring(4,6),16)
-            var rc = r.toString(16)
-            var gc = g.toString(16)
-            var bc = b.toString(16)
-            if (rc.length < 2){
-                rc = '0'+rc
-            }
-            if (gc.length < 2){
-                gc = '0'+gc
-            }
-            if (bc.length < 2){
-                bc = '0'+bc
-            }
-            return "#"+rc+gc+bc
-        }
         // when user click the label or the block of the class
         // show the infomation of the class on the right top of corner
         function classClick(code,desc,loc){
@@ -287,18 +195,6 @@
             }
         }
     </script>
-    <style type="text/css">
-        .blackLine{
-            stroke : black;
-        }
-        body{
-            text-align: center;
-        }
-        .class{
-            stroke-width:0.5;
-            stroke: white;
-        }
-    </style>
 </head>
 <body>
     <div style="float:left">
