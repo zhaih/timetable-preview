@@ -4,12 +4,13 @@ var bodyParser = require('body-parser');
 var path       = require('path');
 var app        = express();
 var server     = http.createServer(app);
-var PORT       = 80;
+var PORT       = process.env.PORT || 80;
 var logger     = require('morgan');
 var fs         = require('fs');
 
 var classFiles = new Object();
 
+app.set('port',PORT);
 app.use(express.static('Template'));
 app.use('/static',express.static('Static'));
 
@@ -44,5 +45,6 @@ function loadClassFile(){
 }
 
 loadClassFile();
-server.listen(PORT);
-console.log("server has started");
+app.listen(app.get('port'),function(){
+    console.log("server has started");
+})
