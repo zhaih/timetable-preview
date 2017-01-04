@@ -1,5 +1,5 @@
 # timetable-preview
-preview the unimebl course timetable
+preview the unimelb course timetable
 
 a simple webpage to visualize the timetable given by unimelb handbook
 
