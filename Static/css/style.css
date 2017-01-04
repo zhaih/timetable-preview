@@ -2,9 +2,51 @@
     stroke : black;
 }
 body{
-    text-align: center;
+    text-align : center;
+	color: #ffffff;
 }
 .class{
-    stroke-width:0.5;
-    stroke: white;
+    stroke-width : 0.5;
+    stroke : white;
+}
+
+#title{
+	float: left;
+	padding: 10px 50px 10px 190px;
+}
+
+#courses{
+	float:left;
+	padding: 2px 50px 2px 0;
+	text-align:left;
+}
+
+.classSpec{
+	float:left;
+	text-align : left;
+	padding-top: 15px;
+}
+
+#timetable{
+	position: absolute;
+	left:50px;
+}
+
+#discription {
+    background-color: #036;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: 100% 0;
+    background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
+}
+
+#logo a {
+    position: absolute;
+    top: -15px;
+    left: 5px; 
+    height: 150px;
+    width: 150px;
+    background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/logo-sub.gif");
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
 }
