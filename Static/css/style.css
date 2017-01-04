@@ -24,11 +24,12 @@ body{
 .classSpec{
 	float:left;
 	text-align : left;
-	padding-top: 15px;
+	padding-top: 5px;
 }
 
 #timetable{
 	position: absolute;
+    padding-top: 30px
 	left:50px;
 }
 
@@ -43,7 +44,7 @@ body{
 #logo a {
     position: absolute;
     top: -15px;
-    left: 5px; 
+    left: 5px;
     height: 150px;
     width: 150px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/logo-sub.gif");

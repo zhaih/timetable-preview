@@ -15,16 +15,22 @@
         var wordPadding = 6
         var fontSize = 14
         var courses = new Object();
+        var hideRedundent = false;
         $(document).ready(function(){
             getCourses()
+            $("#hideRedundent").click(()=>{
+                hideRedundent = !hideRedundent
+                loadClasses(new Timetable)
+            })
         })
         // given a timetable, load all classes from courses
         // and draw the timetable
         function loadClasses(tt){
             for (course in courses){
                 if (courses[course].visible){
-                    courses[course].forEach(function(c){
-                        tt.addClass(c)
+                    courses[course].forEachClass(function(c){
+                        if (!hideRedundent || c.chooseStatus >= 0)
+                            tt.addClass(c)
                     })
                 }
             }
@@ -34,9 +40,8 @@
         // class used here
         function parseClass(tempCourse){
             for (course in tempCourse){
-                courses[course] = new Array()
-                courses[course].visible = false
                 var color = getRandomColor()
+                courses[course] = new _course(color);
                 var subjectCode = course.substring(0,course.indexOf('_'))
                 tempCourse[course].forEach(function(c){
                     var name = c.desc
@@ -44,8 +49,9 @@
                     var end = parseInt(c.fin.replace(":",""))
                     var day = c.day
                     var place = c.loc
-                    var newC = new _class(subjectCode,name,day,start,end,place,color)
-                    courses[course].push(newC)
+                    var newC = new _class(subjectCode,course,name,day,start,end,place,color)
+                    newC.click = chooseClass(courses[course],newC)
+                    courses[course].addClass(newC)
                 })
 
             }
@@ -65,8 +71,8 @@
                     var span = document.createElement('span')
                     $(span)
                         .html(course)
-                        .css("background",courses[course][0].color)
-                        .css("color",courses[course][0].fontColor)
+                        .css("background",courses[course].color)
+                        .css("color",courses[course].fontColor)
                     console.log(course)
                     $(entry)
                         .attr('type','checkbox')
@@ -138,6 +144,10 @@
                 for (var j = 0; j < day.length; j++){
                     for (k in day[j]){
                         var e = day[j][k]
+                        var color = e.color;
+                        if (e.chooseStatus < 0){
+                            color = darkerColor(e.color);
+                        }
                         var startH = Math.floor(e.start/100) - 6
                         var startS = e.start%100
                         var endH = Math.floor(e.end/100) - 6
@@ -169,8 +179,8 @@
                             .attr('width',lWidth)
                             .attr('height',lHeight * duration)
                             .attr('class','class')
-                            .css('fill',e.color)
-                            .click(classClick(e.subjectCode,e.name,e.place))
+                            .css('fill',color)
+                            .click(classClick(e.subjectCode,e.name,e.place,e.click))
                         textGroup.push(subCode)
                         textGroup.push(desc)
                         rectGroup.push(rect)
@@ -187,11 +197,22 @@
         }
         // when user click the label or the block of the class
         // show the infomation of the class on the right top of corner
-        function classClick(code,desc,loc){
+        function classClick(code,desc,loc,chooseClick){
             return function(){
                 $("#subjectCode").text(code)
                 $("#desc").text(desc)
                 $("#loc").text(loc)
+                $("#chooseButton").off("click")
+                $("#chooseButton").click(chooseClick)
+            }
+        }
+        function chooseClass(_course,_class){
+            return ()=>{
+                _course[_class.name].forEach(c => {
+                    c.chooseStatus = -1
+                })
+                _class.chooseStatus = 1
+                loadClasses(new timetable);
             }
         }
     </script>
@@ -211,9 +232,12 @@
             <p>subjectCode: <span id = "subjectCode"></span></p>
             <p>Description: <span id = "desc"></span></p>
             <p>Location: <span id = "loc"></span></p>
+            <button type="button" name="button" id="chooseButton">Choose</button>
         </div>
     </div>
     <div>
+        <button type="button" name="button" id="hideRedundent">
+            Hide Redundent</button>
         <svg id="timetable">
         </svg>
     </div>

@@ -45,8 +45,9 @@ function timetable(){
 /**
 * class of class
 */
-function _class(subjectCode, name, day, start, end, place, color){
+function _class(subjectCode, courseTitle, name, day, start, end, place, color){
     this.subjectCode = subjectCode
+    this.courseTitle = courseTitle
     this.name = name
     this.start = start
     this.end = end
@@ -54,6 +55,38 @@ function _class(subjectCode, name, day, start, end, place, color){
     this.place = place
     this.color = color
     this.fontColor = antiColor(color)
+    this.chooseStatus = 0
+    // 0 for not chosen and no other same type classes chosen
+    // 1 for chosen
+    // -1 for not chosen and one of same type class chosen
+}
+/**
+* class of course
+* classify the _class according to its name
+*/
+function _course(color){
+    this.color = color
+    this.fontColor = antiColor(color)
+    this.visible = false;
+    this.classType = new Array()
+    this.addClass = _class => {
+        if (this[_class.name] == undefined){
+            this[_class.name] = new Array()
+            this.classType.push(_class.name)
+
+        }
+        this[_class.name].push(_class)
+    }
+    this.forEachType = callback => {
+        this.classType.forEach(item => {
+            callback(item, this[item])
+        })
+    }
+    this.forEachClass = callback => {
+        this.classType.forEach(item => {
+            this[item].forEach(callback)
+        })
+    }
 }
 // transfer number to weekdays
 function toWeekday(num){
