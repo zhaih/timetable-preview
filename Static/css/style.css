@@ -5,6 +5,7 @@ body{
 	color: #ffffff;
 	font-family:"Courier New", Courier, monospace;
 }
+
 .class{
     stroke-width : 0.5;
     stroke : white;
@@ -12,20 +13,28 @@ body{
 
 #title{
     text-align : center;
+    font-family: "Times New Roman", Times, serif;
 	float: left;
-	padding: 10px 20px 10px 160px;
+	padding: 10px 40px 10px 180px;
 }
 
 #courses{
 	float:left;
-	padding: 2px 20px 2px 0;
+	padding: 2px 40px 2px 0;
 	text-align:left;
+	font-size: 15px;
 }
 
 .classSpec{
 	float:left;
 	text-align : left;
-	padding-top: 15px;
+	font-size: 14px;
+	padding-top: 20px;
+}
+
+#subjectCode{
+	font-size: 16px;
+	font-weight: bold;
 }
 
 #timetable{
@@ -35,7 +44,7 @@ body{
 
 #discription {
     background-color: #036;
-    height: 155px;
+    height: 154px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
     background-repeat: no-repeat;
     background-position: 100% 0;
@@ -43,7 +52,7 @@ body{
 
 #logo a {
     position: absolute;
-    top: 0px;
+    top: 5px;
     left: 20px;
     height: 130px;
     width: 130px;
@@ -60,12 +69,13 @@ body{
 	top:40px;
     width: auto;
     height: 30px;
-    border-radius: 5px;
-    border-width: 3px;
+    border-radius: 4px;
+    border-width: 2px;
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 4px;
     text-align : center;
+    text-shadow: 1px 1px grey;
     color: #ffffff;
 }
 
@@ -77,11 +87,12 @@ body{
 	top:100px;
     width: auto;
     height: 30px;
-    border-radius: 5px;
-    border-width: 3px;
+    border-radius: 4px;
+    border-width: 2px;
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 4px;
     text-align : center;
+    text-shadow: 1px 1px grey;
     color: #ffffff;
 }
