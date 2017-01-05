@@ -5,6 +5,7 @@ body{
 	color: #ffffff;
 	font-family:"Courier New", Courier, monospace;
 }
+
 .class{
     stroke-width : 0.5;
     stroke : white;
@@ -13,19 +14,26 @@ body{
 #title{
     text-align : center;
 	float: left;
-	padding: 10px 20px 10px 160px;
+	padding: 10px 30px 10px 170px;
 }
 
 #courses{
 	float:left;
-	padding: 2px 20px 2px 0;
+	padding: 2px 30px 2px 0;
 	text-align:left;
+	font-size: 15px;
 }
 
 .classSpec{
 	float:left;
 	text-align : left;
-	padding-top: 15px;
+	font-size: 14px;
+	padding-top: 23px;
+}
+
+#subjectCode{
+	font-size: 16px;
+	font-weight: bold;
 }
 
 #timetable{
@@ -35,7 +43,7 @@ body{
 
 #discription {
     background-color: #036;
-    height: 155px;
+    height: 154px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
     background-repeat: no-repeat;
     background-position: 100% 0;
@@ -66,6 +74,7 @@ body{
     line-height: 20px;
     margin-bottom: 4px;
     text-align : center;
+    text-shadow: 1px 1px grey;
     color: #ffffff;
 }
 
@@ -83,5 +92,6 @@ body{
     line-height: 20px;
     margin-bottom: 4px;
     text-align : center;
+    text-shadow: 1px 1px grey;
     color: #ffffff;
 }
