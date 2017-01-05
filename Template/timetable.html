@@ -92,7 +92,7 @@
             // count the total rows first
             var rows = timetable.rows()
             var svgW = rows * lWidth + 2 * lPadding
-            var svgH = 16 * lHeight + 2 * uPadding // from 6am to 10pm, totally 16 hours, 40 per hour
+            var svgH = 16 * lHeight + 2 * uPadding // from 6am to 10pm, 16 hours in total, 40 per hour
             $('#timetable').empty().attr('width',svgW).attr('height',svgH)
             // 16 hours
             for (var i = 0; i < 17; i++){
@@ -124,7 +124,9 @@
             $('#timetable').append(vLine)
             // 5 days
             var offset = 0
+            var lastOffset = 0;
             for (var i = 1; i < 6; i++){
+                lastOffset = offset;
                 offset += timetable[toWeekday(i)].length
                 var vLine = document.createElementNS('http://www.w3.org/2000/svg','line')
                 $(vLine).
@@ -134,6 +136,16 @@
                         attr('y2',uPadding + 16 * lHeight).
                         attr('class','blackLine')
                 $('#timetable').append(vLine)
+                // day label
+                var dayLabel = document.createElementNS('http://www.w3.org/2000/svg','text')
+                $(dayLabel)
+                        .attr('x',lPadding + (offset + lastOffset) / 2 * lWidth)
+                        .attr('y',uPadding - wordPadding)
+                        .attr('font-size','16')
+                        .attr('font-family','Verdana')
+                        .attr('text-anchor','middle')
+                        .html(toWeekday(i))
+                $('#timetable').append(dayLabel);
             }
             // draw the classes
             offset = 0
