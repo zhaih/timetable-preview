@@ -13,13 +13,14 @@ body{
 
 #title{
     text-align : center;
+    font-family: "Times New Roman", Times, serif;
 	float: left;
-	padding: 10px 30px 10px 170px;
+	padding: 10px 40px 10px 180px;
 }
 
 #courses{
 	float:left;
-	padding: 2px 30px 2px 0;
+	padding: 2px 40px 2px 0;
 	text-align:left;
 	font-size: 15px;
 }
@@ -28,7 +29,7 @@ body{
 	float:left;
 	text-align : left;
 	font-size: 14px;
-	padding-top: 23px;
+	padding-top: 20px;
 }
 
 #subjectCode{
@@ -51,7 +52,7 @@ body{
 
 #logo a {
     position: absolute;
-    top: 0px;
+    top: 5px;
     left: 20px;
     height: 130px;
     width: 130px;
