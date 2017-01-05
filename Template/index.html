@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Choose Courses</title>
+        <script src="/static/js/jquery.min.js"></script>
+        <script type="text/javascript">
+            var courseList
+            var choosedCourse = new Object()
+            $(document).ready(()=>{
+                fetchCourses(()=>{
+                    $('#tableBody').empty()
+                    courseList.forEach(item=>{
+                        var tr = document.createElement('tr')
+                        var titleTd = document.createElement('td')
+                        var checkTd = document.createElement('td')
+                        var checkBox = document.createElement('input')
+                        $(titleTd).html(item)
+                        $(checkBox)
+                            .attr('type','checkbox')
+                            .attr('value',item)
+                            .click(()=>{
+                                choosedCourse[$(this).attr('value')] =
+                                    $(this).is(":checked")
+                            })
+                        $(checkTd).append(checkBox)
+                        $(tr).append(titleTd).append(checkTd)
+                        $('#tableBody').append(tr)
+                    })
+                })
+            })
+            function fetchCourses(callback){
+                $.get('/getCourseTitles',(data,status)=>{
+                    if (status != 'success'){
+                        console.log('GET /getCourseTitles failed');
+                    }
+                        courseList = data
+                        if (callback != undefined){
+                            callback()
+                        }
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <td>
+                        Course title
+                    </td>
+                    <td>
+                        Select
+                    </td>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+
+            </tbody>
+        </table>
+        <!-- Here is for adding courses that not included -->
+        <p>
+            If your timetable not inclueded, use following to query
+        </p>
+        <input type="input" id="url" value="" placeholder="Timetable url">
+        <button type="button" id="query">Query!</button>
+        <button type="button" id="toTimetable">
+            <a href="/timetable.html">View Timetable!</a>
+        </button>
+    </body>
+</html>

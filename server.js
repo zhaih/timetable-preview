@@ -17,9 +17,13 @@ app.set('port',PORT);
 app.use(express.static('Template'));
 app.use('/static',express.static('Static'));
 
-app.get('/',function(req,res){
-    res.redirect('/timetable.html')
-});
+// app.get('/',function(req,res){
+//     res.redirect('/timetable.html')
+// });
+
+app.get('/getCourseTitles',function(req,res){
+    res.json(Object.keys(classFiles));
+})
 
 app.get('/getCourses',function(req,res){
     res.json(classFiles);
