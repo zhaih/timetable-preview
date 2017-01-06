@@ -2,7 +2,6 @@
     stroke : black;
 }
 body{
-	color: #ffffff;
 	font-family:"Courier New", Courier, monospace;
 }
 
@@ -15,17 +14,22 @@ body{
     text-align : center;
     font-family: "Times New Roman", Times, serif;
 	float: left;
+	color: #ffffff;
 	padding: 10px 40px 10px 180px;
 }
 
 #courses{
 	float:left;
-	padding: 2px 40px 2px 0;
+	color: #ffffff;
+	font-weight: bold;
+	font-family: "Times New Roman", Times, serif; 
+	padding: 7px 25px 2px 0;
 	text-align:left;
 	font-size: 15px;
 }
 
 .classSpec{
+	color: #ffffff;
 	float:left;
 	text-align : left;
 	font-size: 14px;
@@ -44,7 +48,7 @@ body{
 
 #discription {
     background-color: #036;
-    height: 154px;
+    height: 148px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
     background-repeat: no-repeat;
     background-position: 100% 0;
@@ -52,7 +56,7 @@ body{
 
 #logo a {
     position: absolute;
-    top: 5px;
+    top: 3px;
     left: 20px;
     height: 130px;
     width: 130px;
@@ -65,8 +69,8 @@ body{
 	background: #33477D;
 	float:right;
 	position:absolute;
-	right:15px;
-	top:40px;
+	right:25px;
+	top:35px;
     width: auto;
     height: 30px;
     border-radius: 4px;
@@ -83,7 +87,7 @@ body{
 	background: #33477D;
     float:right;
 	position:absolute;
-	right:15px;
+	right:25px;
 	top:100px;
     width: auto;
     height: 30px;
