@@ -9,6 +9,7 @@
             var courseList
             var choosedCourse = new Object()
             $(document).ready(()=>{
+                // get courses titles and fill it to the table
                 fetchCourses(()=>{
                     $('#tableBody').empty()
                     courseList.forEach(item=>{
@@ -19,8 +20,9 @@
                         $(titleTd).html(item)
                         $(checkBox)
                             .attr('type','checkbox')
+                            .attr('name','course')
                             .attr('value',item)
-                            .click(()=>{
+                            .click(function(){
                                 choosedCourse[$(this).attr('value')] =
                                     $(this).is(":checked")
                             })
@@ -29,7 +31,33 @@
                         $('#tableBody').append(tr)
                     })
                 })
+                // bind the button to redirect to timetable
+                $("#toTimetable").click(function(){
+                    var form = document.createElement('form')
+                    var item = document.createElement('input')
+                    $(item)
+                        .attr('name','courses')
+                        .attr('value',getChoosedCourses())
+                    $(form)
+                        .attr('method','post')
+                        .attr('action','/timetable')
+                        .css('display','none')
+                        .append(item)
+                    $('body').append(form)
+                    $(form).submit()
+                })
             })
+            // get all choosed courses and transfer it to JSON string
+            function getChoosedCourses(){
+                var res = new Array()
+                for (var key in choosedCourse){
+                    if (choosedCourse[key]){
+                        res.push(key)
+                    }
+                }
+                return JSON.stringify(res)
+            }
+            // get all the course titles
             function fetchCourses(callback){
                 $.get('/getCourseTitles',(data,status)=>{
                     if (status != 'success'){
@@ -66,7 +94,7 @@
         <input type="input" id="url" value="" placeholder="Timetable url">
         <button type="button" id="query">Query!</button>
         <button type="button" id="toTimetable">
-            <a href="/timetable.html">View Timetable!</a>
+            <!-- <a href="/timetable">View Timetable!</a> -->
         </button>
     </body>
 </html>

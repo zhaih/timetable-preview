@@ -14,12 +14,20 @@ var scrapper   = require('./scrapper');
 var classFiles;
 
 app.set('port',PORT);
+app.set('view engine','ejs');
+app.set('views',path.join(__dirname,'Template'));
 app.use(express.static('Template'));
 app.use('/static',express.static('Static'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
-// app.get('/',function(req,res){
-//     res.redirect('/timetable.html')
-// });
+app.get('/',function(req,res){
+    res.render('index');
+});
+
+app.get('/timetable',function(req,res){
+    res.render('timetable');
+})
 
 app.get('/getCourseTitles',function(req,res){
     res.json(Object.keys(classFiles));
@@ -28,6 +36,15 @@ app.get('/getCourseTitles',function(req,res){
 app.get('/getCourses',function(req,res){
     res.json(classFiles);
 });
+
+app.post('/timetable',function(req,res){
+    var courses = JSON.parse(req.body.courses);
+    var injection = new Object();
+    for (i in courses){
+        injection[courses[i]] = classFiles[courses[i]];
+    }
+    res.render('timetable',{courses: JSON.stringify(injection)})
+})
 
 // load single class file, and a callback function could be passed and will be
 // called after everything is done

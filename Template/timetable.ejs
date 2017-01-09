@@ -14,10 +14,13 @@
         var lHeight = 32
         var wordPadding = 6
         var fontSize = 14
-        var courses = new Object();
-        var hideRedundent = false;
+        var courses = new Object()
+        var choosedCourse = <%- courses %>
+        var hideRedundent = false
         $(document).ready(function(){
-            getCourses()
+            parseClass(choosedCourse)
+            loadClasses(new timetable())
+            setEntries()
             $("#hideRedundent").click(()=>{
                 hideRedundent = !hideRedundent
                 loadClasses(new timetable())
@@ -66,26 +69,29 @@
                 }
                 parseClass(data)
                 loadClasses(new timetable())
-                for (course in courses){
-                    var entry = document.createElement('input')
-                    var span = document.createElement('span')
-                    $(span)
-                        .html(course)
-                        .css("background",courses[course].color)
-                        .css("color",courses[course].fontColor)
-                    console.log(course)
-                    $(entry)
-                        .attr('type','checkbox')
-                        .attr('name','course')
-                        .attr('value',course)
-                        .click(function(){
-                            courses[$(this).attr('value')].visible
-                                = $(this).is(":checked")
-                            loadClasses(new timetable())
-                        })
-                    $('#courses').append(entry).append(span).append('<br>')
-                }
+                setEntries()
             })
+        }
+        function setEntries(){
+            for (course in courses){
+                var entry = document.createElement('input')
+                var span = document.createElement('span')
+                $(span)
+                    .html(course)
+                    .css("background",courses[course].color)
+                    .css("color",courses[course].fontColor)
+                console.log(course)
+                $(entry)
+                    .attr('type','checkbox')
+                    .attr('name','course')
+                    .attr('value',course)
+                    .click(function(){
+                        courses[$(this).attr('value')].visible
+                            = $(this).is(":checked")
+                        loadClasses(new timetable())
+                    })
+                $('#courses').append(entry).append(span).append('<br>')
+            }
         }
         // draw the given timetable
         function drawTable(timetable){
