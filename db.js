@@ -1,10 +1,18 @@
-var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://heroku_698304zn:fb098us10fh01eq83fhn1trj5v@ds159998.mlab.com:59998/heroku_698304zn';
+var MONGODB_URI = process.env.MONGODB_URI;
 var mongoose    = require('mongoose');
 var Schema      = mongoose.Schema;
 
+if (MONGODB_URI == undefined){
+    module.exports.useDB = false;
+}else{
+    module.exports.useDB = true;
+}
+
 // connect to mongodb
-mongoose.connect(MONGODB_URI)
-var db = mongoose.connection;
+if (MONGODB_URI != undefined){
+    mongoose.connect(MONGODB_URI)
+    var db = mongoose.connection;
+}
 
 // Schema for each class
 var classSchema = new Schema({

@@ -13,7 +13,7 @@ var scrapper    = require('./scrapper');
 var db          = require('./db')
 
 var classFiles = new Object();
-
+var useDB       = db.useDB;
 
 app.set('port',PORT);
 app.set('view engine','ejs');
@@ -23,6 +23,33 @@ app.use(express.static('Template'));
 app.use('/static',express.static('Static'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+if (useDB){
+    db.connect(function(err){
+        if (err){
+            console.error(err);
+            return;
+        }
+        db.allCourses((err,data)=>{
+            if (err){
+                console.error(err);
+                return;
+            }
+            data.forEach(function(item){
+                classFiles[item.title] = item.classes;
+            })
+        })
+        app.listen(app.get('port'),function(){
+            console.log('server started at port:',app.get('port'));
+        });
+    });
+}else{
+    loadAllClassFiles();
+    app.listen(app.get('port'),function(){
+        console.log('server started at port:',app.get('port'));
+    });
+}
+
 
 app.get('/',function(req,res){
     res.render('index');
@@ -47,13 +74,28 @@ app.post('/getCourses',function(req,res){
             return;
         }
         for (course in courses){
-            db.insertOrUpdate(db.newEntry(course,courses[course]),(err,data)=>{
-                if (err){
-                    console.error(err);
-                    return;
-                }
-                classFiles[course] = data.classes;
-            });
+            // use database to store info
+            if (useDB){
+                db.insertOrUpdate(db.newEntry(course,courses[course]),(err,data)=>{
+                    if (err){
+                        console.error(err);
+                        return;
+                    }
+                    classFiles[course] = data.classes;
+                });
+            // use file system to store info
+            }else{
+                fs.writeFile(path.join(__dirname,'Timetable',course+'.json'),
+                            JSON.stringify(courses[course]).replace(/,/g,",\n"),(err)=>{
+                                if (err){
+                                    console.error(err);
+                                    return;
+                                }
+                                console.log('write file:',course+'.json','successed');
+                                classFiles[course] = courses[course];
+
+                            });
+            }
         }
     });
     res.end();
@@ -137,22 +179,3 @@ function loadAllClassFiles(){
         });
     });
 }
-
-db.connect(function(err){
-    if (err){
-        console.error(err);
-        return;
-    }
-    db.allCourses((err,data)=>{
-        if (err){
-            console.error(err);
-            return;
-        }
-        data.forEach(function(item){
-            classFiles[item.title] = item.classes;
-        })
-    })
-    app.listen(app.get('port'),function(){
-        console.log('server started at port:',app.get('port'));
-    });
-});
