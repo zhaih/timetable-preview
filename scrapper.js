@@ -1,5 +1,4 @@
 
-
 var request = require('request');
 var cheerio = require('cheerio');
 var path = require('path');
@@ -15,24 +14,18 @@ function classTime(C_E,desc,day,start,fin,loc,start_date){
     this.loc = loc;
     this.start_date = start_date;
 }
-// scrape the timetable from given url and save to fileLoc as json file
-module.exports.scrape = function(url,fileLoc,callback){
+// scrape the timetable from given url and two parameters will be
+// passed into callback, error and result which result is an Array
+// of classTime
+module.exports.scrape = function(url,callback){
     if (url == undefined){
         console.log("ERROR: url not specified");
         return;
     }
-    if (fileLoc == undefined){
-        fileLoc = './';
-    }
     if (callback == undefined){
-        if (typeof fileLoc == 'function'){
-            callback = fileLoc;
-        }
-        else{
-            callback = success=>{
-                console.log(success)
-                return;
-            }
+        callback = success=>{
+            console.log(success);
+            return;
         }
     }
     request(url,function(err,html){
@@ -45,13 +38,12 @@ module.exports.scrape = function(url,fileLoc,callback){
             return;
         }
         var $ = cheerio.load(html.body);
+        var result = new Object();
         $('div h3').each(function(i){
             var h3 = $(this).text();
             var fileName = h3.substring(h3.indexOf(':')+1,h3.length)
                 .replace(/[\s\n\r]*$/,'').replace(/\s-\s/,'_').replace(/^\s/,'')
                 .replace(/\//g,'_');
-            fileName += '.json';
-            fileName = path.join(__dirname,fileLoc,fileName)
             var classes = new Array();
             var trs = $(this).siblings('table.cyon_table').children('tbody').children('tr');
             trs.each(function(i){
@@ -66,13 +58,9 @@ module.exports.scrape = function(url,fileLoc,callback){
                 classes.push(new classTime(C_E,desc,day,start,fin,loc,start_date));
             });
             while(classes.length < trs.length );
-            fs.writeFile(fileName,JSON.stringify(classes).replace(/,/g,",\n"),function(err){
-                if (!err){
-                    console.log("file :",fileName,"write successed");
-                }
-                callback(err,fileName);
-            });
-
-        })
+            result[fileName] = classes;
+        });
+        while(Object.keys(result).length < $('div h3').length );
+        callback(null,result);
     });
 }

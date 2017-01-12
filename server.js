@@ -1,16 +1,19 @@
-var express    = require('express');
-var http       = require('http');
-var bodyParser = require('body-parser');
-var path       = require('path');
-var app        = express();
-var server     = http.createServer(app);
-var PORT       = process.env.PORT || 80;
-var logger     = require('morgan');
-var fs         = require('fs');
-var scrapper   = require('./scrapper');
+// This version is for deployment on heroku, and may not merge into master
 
+var express     = require('express');
+var http        = require('http');
+var bodyParser  = require('body-parser');
+var path        = require('path');
+var app         = express();
+var server      = http.createServer(app);
+var PORT        = process.env.PORT || 80;
+var logger      = require('morgan');
+var fs          = require('fs');
+var scrapper    = require('./scrapper');
+var db          = require('./db')
 
-var classFiles;
+var classFiles = new Object();
+
 
 app.set('port',PORT);
 app.set('view engine','ejs');
@@ -38,12 +41,20 @@ app.get('/getCourses',function(req,res){
 });
 
 app.post('/getCourses',function(req,res){
-    scrapeCourseInfo(req.body.subjectCode,req.body.year,function(err,filename){
+    scrapeCourseInfo(req.body.subjectCode,req.body.year,function(err,courses){
         if (err){
             console.error(err);
             return;
         }
-        loadClassFile(filename);
+        for (course in courses){
+            db.insertOrUpdate(db.newEntry(course,courses[course]),(err,data)=>{
+                if (err){
+                    console.error(err);
+                    return;
+                }
+                classFiles[course] = data.classes;
+            });
+        }
     });
     res.end();
 });
@@ -62,14 +73,14 @@ app.post('/timetable',function(req,res){
 // be careful with the call back since it would be called twice sometimes
 // since there might be two file writing, if there's error, there will only be
 // one parameter that is safe which is first one, err, if no error , the second
-// one indicating the filename is also available
+// one indicating the course data is also available
 function scrapeCourseInfo(subjectCode, year, callback){
     scrapper.scrape('https://sws.unimelb.edu.au/'
         + year
         +'/Reports/List.aspx?objects='
         + subjectCode
         + '&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',
-        'Timetable',callback);
+        callback);
 
 }
 
@@ -126,7 +137,22 @@ function loadAllClassFiles(){
         });
     });
 }
-loadAllClassFiles();
-app.listen(app.get('port'),function(){
-    console.log("server has started");
-})
+
+db.connect(function(err){
+    if (err){
+        console.error(err);
+        return;
+    }
+    db.allCourses((err,data)=>{
+        if (err){
+            console.error(err);
+            return;
+        }
+        data.forEach(function(item){
+            classFiles[item.title] = item.classes;
+        })
+    })
+    app.listen(app.get('port'),function(){
+        console.log('server started at port:',app.get('port'));
+    });
+});
