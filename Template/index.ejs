@@ -9,43 +9,22 @@
             var courseList
             var choosedCourse = new Object()
             $(document).ready(()=>{
+                // get set the year selector
+                for (var i = new Date().getFullYear() - 1;
+                 i <= new Date().getFullYear()+1; i++){
+                    var year = document.createElement('option');
+                    $(year)
+                        .attr('value',i)
+                        .html(i)
+                    $('#yearSelect').append(year);
+                }
+
                 // get courses titles and fill it to the table
-                fetchCourses(()=>{
-                    $('#tableBody').empty()
-                    courseList.forEach(item=>{
-                        var tr = document.createElement('tr')
-                        var titleTd = document.createElement('td')
-                        var checkTd = document.createElement('td')
-                        var checkBox = document.createElement('input')
-                        $(titleTd).html(item)
-                        $(checkBox)
-                            .attr('type','checkbox')
-                            .attr('name','course')
-                            .attr('value',item)
-                            .click(function(){
-                                choosedCourse[$(this).attr('value')] =
-                                    $(this).is(":checked")
-                            })
-                        $(checkTd).append(checkBox)
-                        $(tr).append(titleTd).append(checkTd)
-                        $('#tableBody').append(tr)
-                    })
-                })
+                fetchCourses();
                 // bind the button to redirect to timetable
-                $("#toTimetable").click(function(){
-                    var form = document.createElement('form')
-                    var item = document.createElement('input')
-                    $(item)
-                        .attr('name','courses')
-                        .attr('value',getChoosedCourses())
-                    $(form)
-                        .attr('method','post')
-                        .attr('action','/timetable')
-                        .css('display','none')
-                        .append(item)
-                    $('body').append(form)
-                    $(form).submit()
-                })
+                $("#toTimetable").click(toTimetable)
+                // bind function to query button
+                $("#query").click(query)
             })
             // get all choosed courses and transfer it to JSON string
             function getChoosedCourses(){
@@ -57,16 +36,83 @@
                 }
                 return JSON.stringify(res)
             }
-            // get all the course titles
-            function fetchCourses(callback){
+            // get all the course titles and set course list
+            function fetchCourses(){
                 $.get('/getCourseTitles',(data,status)=>{
                     if (status != 'success'){
                         console.log('GET /getCourseTitles failed');
+                        return;
                     }
-                        courseList = data
-                        if (callback != undefined){
-                            callback()
+                    var different = false;
+                    if ( courseList == undefined || courseList.length != data.length){
+                        different = true;
+                    }else{
+                        for (let i=0; i < data.length; i++){
+                            if (courseList[i] != data[i]){
+                                different = true;
+                            }
                         }
+                    }
+                    if (different){
+                        courseList = data
+                        showCoursesList()
+                    }
+                    setTimeout(fetchCourses,5000)
+                })
+            }
+            // query the course
+            function query(){
+                var queryItem = {
+                    year : $('#yearSelect').val(),
+                    subjectCode : $('#subjectCode').val()
+                }
+                $.post('/getCourses',queryItem,function(data,status){
+                    if (status != 'success'){
+                        conosle.log('ajax to /getCourses failed')
+                        return
+                    }
+                    console.log(data);
+                })
+            }
+            function toTimetable(){
+                var courses = getChoosedCourses()
+                if (courses == '[]'){
+                    alert('you have to choose at least 1 course!')
+                    return;
+                }
+                var form = document.createElement('form')
+                var item = document.createElement('input')
+                $(item)
+                    .attr('name','courses')
+                    .attr('value',courses)
+                $(form)
+                    .attr('method','post')
+                    .attr('action','/timetable')
+                    .css('display','none')
+                    .append(item)
+                $('body').append(form)
+                $(form).submit()
+            }
+            function showCoursesList(){
+                $('#tableBody').empty()
+                choosedCourse = new Object()
+                courseList.forEach(item=>{
+                    var tr = document.createElement('tr')
+                    var titleTd = document.createElement('td')
+                    var checkTd = document.createElement('td')
+                    var checkBox = document.createElement('input')
+                    $(titleTd).html(item)
+                    $(checkBox)
+                        .attr('type','checkbox')
+                        .attr('name','course')
+                        .attr('value',item)
+                        .click(function(){
+                            choosedCourse[$(this).attr('value')] =
+                                $(this).is(":checked")
+                        })
+                    $(checkTd).append(checkBox)
+                    $(tr).append(titleTd).append(checkTd)
+                    $('#tableBody').append(tr)
                 })
             }
         </script>
@@ -91,10 +137,12 @@
         <p>
             If your timetable not inclueded, use following to query
         </p>
-        <input type="input" id="url" value="" placeholder="Timetable url">
+        <input type="input" id="subjectCode" value="" placeholder="Subject Code">
+        <select id="yearSelect" name="year">
+        </select>
         <button type="button" id="query">Query!</button>
         <button type="button" id="toTimetable">
-            <!-- <a href="/timetable">View Timetable!</a> -->
+            View Timetable!
         </button>
     </body>
 </html>

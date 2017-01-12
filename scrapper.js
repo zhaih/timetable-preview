@@ -30,6 +30,7 @@ module.exports.scrape = function(url,fileLoc,callback){
         }
         else{
             callback = success=>{
+                console.log(success)
                 return;
             }
         }
@@ -37,6 +38,10 @@ module.exports.scrape = function(url,fileLoc,callback){
     request(url,function(err,html){
         if (err){
             console.log(err);
+            return;
+        }
+        if (html.statusCode != 200){
+            callback(new Error("httpError: "+html.statusCode))
             return;
         }
         var $ = cheerio.load(html.body);
@@ -64,11 +69,8 @@ module.exports.scrape = function(url,fileLoc,callback){
             fs.writeFile(fileName,JSON.stringify(classes).replace(/,/g,",\n"),function(err){
                 if (!err){
                     console.log("file :",fileName,"write successed");
-                    callback(true);
-                }else{
-                    console.error(err);
-                    callback(false);
                 }
+                callback(err,fileName);
             });
 
         })

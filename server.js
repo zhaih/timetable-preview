@@ -9,7 +9,6 @@ var logger     = require('morgan');
 var fs         = require('fs');
 var scrapper   = require('./scrapper');
 
-// scrapper.scrape('https://sws.unimelb.edu.au/2017/Reports/List.aspx?objects=INFO30005&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list')
 
 var classFiles;
 
@@ -26,7 +25,7 @@ app.get('/',function(req,res){
 });
 
 app.get('/timetable',function(req,res){
-    res.render('timetable');
+    res.redirect('/');
 })
 
 app.get('/getCourseTitles',function(req,res){
@@ -37,14 +36,41 @@ app.get('/getCourses',function(req,res){
     res.json(classFiles);
 });
 
+app.post('/getCourses',function(req,res){
+    scrapeCourseInfo(req.body.subjectCode,req.body.year,function(err,filename){
+        if (err){
+            console.error(err);
+            return;
+        }
+        loadClassFile(filename);
+    });
+    res.end();
+});
+
 app.post('/timetable',function(req,res){
     var courses = JSON.parse(req.body.courses);
     var injection = new Object();
     for (i in courses){
         injection[courses[i]] = classFiles[courses[i]];
     }
-    res.render('timetable',{courses: JSON.stringify(injection)})
-})
+    res.render('timetable',{courses: JSON.stringify(injection)});
+});
+
+
+// scrape the timetable infomation based on given subject code and year,
+// be careful with the call back since it would be called twice sometimes
+// since there might be two file writing, if there's error, there will only be
+// one parameter that is safe which is first one, err, if no error , the second
+// one indicating the filename is also available
+function scrapeCourseInfo(subjectCode, year, callback){
+    scrapper.scrape('https://sws.unimelb.edu.au/'
+        + year
+        +'/Reports/List.aspx?objects='
+        + subjectCode
+        + '&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',
+        'Timetable',callback);
+
+}
 
 // load single class file, and a callback function could be passed and will be
 // called after everything is done
