@@ -2,7 +2,7 @@
     stroke : black;
 }
 body{
-	font-family:"Courier New", Courier, monospace;
+
 }
 
 .class{
@@ -27,7 +27,7 @@ body{
 	font-size: 15px;
 }
 
-.classSpec{
+#classSpec{
 	margin-left:30px;
 	float:left;
 	text-align : left;
@@ -58,7 +58,7 @@ body{
 #logo a {
     position: absolute;
     top: -10px;
-    left: 20px;
+    left:30px;
     height: 120px;
     width: 120px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/logo-sub.gif");
@@ -68,10 +68,8 @@ body{
 
 #chooseButton{
 	background: #33477D;
-	float:right;
-	position:absolute;
-	right:25px;
-	top:15px;
+	float:left;
+	left:25px;
     width: auto;
     height: 30px;
     border-radius: 4px;
@@ -86,10 +84,8 @@ body{
 
 #hideRedundent{
 	background: #33477D;
-    float:right;
-	position:absolute;
-	right:25px;
-	top:80px;
+	left:25px;
+	float:left;
     width: auto;
     height: 30px;
     border-radius: 4px;
