@@ -6,7 +6,9 @@
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/utils.js"></script>
     <script src="/static/js/timetable.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/style.css" charset="utf-8">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <script type="text/javascript">
         var lPadding = 50
         var uPadding = 50
@@ -238,26 +240,30 @@
 </head>
 <body>
     <div id = "discription">
-        <div id = "logo">
-            <a href="" target=""></a>
+        <div class="row">
+            <div id = "logo">
+                <a href="" target=""></a>
+            </div>
+            <div id="title">
+                <h1>Timetable</h1>
+                <h2>Student × School</h2>
+            </div>
+            <div>
+                <button type = "button" name = "button" id = "chooseButton">Choose</button>
+                <button type = "button" name = "button" id = "hideRedundent">Hide Redundent</button>
+            </div>
         </div>
-        <div id="title">
-            <h1>Timetable</h1>
-            <h2>Student × School</h2>
-        </div>
-        <div id="courses">
-        </div>
-        <div class = "classSpec">
-            <p>subjectCode: <span id = "subjectCode"></span></p>
-            <p>Description: <span id = "desc"></span></p>
-            <p>Location: <span id = "loc"></span></p>
-        </div>
-        <div>
-            <button type = "button" name = "button" id = "chooseButton">Choose</button>
-            <button type = "button" name = "button" id = "hideRedundent">Hide Redundent</button>
+        <div class="row">
+            <div id="courses" class="col-md-4">
+            </div>
+            <div class = "classSpec" class="col-md-8">
+                <p>subjectCode: <span id = "subjectCode"></span></p>
+                <p>Description: <span id = "desc"></span></p>
+                <p>Location: <span id = "loc"></span></p>
+            </div>
         </div>
     </div>
-    <div>
+    <div class="col-md-12">
         <svg id = "timetable"></svg>
     </div>
 </body>
