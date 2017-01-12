@@ -1,4 +1,4 @@
-var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://heroku_698304zn:fb098us10fh01eq83fhn1trj5v@ds159998.mlab.com:59998/heroku_698304zn';
+var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://your_db';
 var mongoose    = require('mongoose');
 var Schema      = mongoose.Schema;
 
