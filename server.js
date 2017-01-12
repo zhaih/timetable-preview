@@ -15,6 +15,7 @@ var classFiles;
 app.set('port',PORT);
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'Template'));
+app.use(logger('dev'));
 app.use(express.static('Template'));
 app.use('/static',express.static('Static'));
 app.use(bodyParser.json());
