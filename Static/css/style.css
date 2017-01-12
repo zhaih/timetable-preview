@@ -20,16 +20,16 @@ body{
 
 #courses{
 	font-weight: bold;
-	font-family: "Times New Roman", Times, serif; 
+	font-family: "Times New Roman", Times, serif;
 	margin-left: 30px;
 	padding: 7px 25px 10px 0;
-	text-align:left;
+	text-align: left;
 	font-size: 15px;
 }
 
 #classSpec{
 	margin-left:30px;
-	float:left;
+	float: left;
 	text-align : left;
 	font-size: 14px;
 	padding-top: 20px;
@@ -41,9 +41,9 @@ body{
 }
 
 #timetable{
-	float:left;
+	float: none;
 	position: inherit;
-	left:25px;
+	left: 25px;
 }
 
 #discription {
@@ -52,13 +52,13 @@ body{
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
     background-repeat: no-repeat;
     background-position: 100% 0;
-    margin-bottom:110px;
+    margin-bottom: 110px;
 }
 
 #logo a {
     position: absolute;
     top: -10px;
-    left:30px;
+    left: 30px;
     height: 120px;
     width: 120px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/logo-sub.gif");
@@ -68,8 +68,8 @@ body{
 
 #chooseButton{
 	background: #33477D;
-	float:left;
-	left:45px;
+	float: left;
+	left: 45px;
     width: auto;
     height: 30px;
     border-radius: 4px;
@@ -77,7 +77,7 @@ body{
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 4px;
-    text-align : center;
+    text-align: center;
     text-shadow: 1px 1px grey;
     color: #ffffff;
 }
@@ -93,7 +93,7 @@ body{
     font-size: 16px;
     line-height: 20px;
     margin-bottom: 4px;
-    text-align : center;
+    text-align: center;
     text-shadow: 1px 1px grey;
     color: #ffffff;
 }
