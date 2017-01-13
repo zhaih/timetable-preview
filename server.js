@@ -7,8 +7,8 @@ var server      = http.createServer(app);
 var PORT        = process.env.PORT || 80;
 var logger      = require('morgan');
 var fs          = require('fs');
-var scrapper    = require('./scrapper');
-var db          = require('./db')
+var scrapper    = require('./lib/scrapper');
+var db          = require('./lib/db')
 
 var classFiles = new Object();
 var useDB       = db.useDB;
