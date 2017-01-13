@@ -21,12 +21,9 @@ body{
 #courses{
 	font-weight: bold;
 	font-family: "Times New Roman", Times, serif;
-	/*float:right;
-	padding-right:1%;*/
 	text-align: left;
 	font-size: 15px;
 	margin-bottom: 1%;
-	/*margin-right:5%;*/
 }
 
 #classSpec{
@@ -55,12 +52,10 @@ body{
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
     background-repeat: no-repeat;
     background-position: 100% 0;
-    /*margin-bottom: 110px;*/
 }
 
 #logo a {
     position: absolute;
-    /*float:left;*/
     top: -10px;
     right: -100px;
     height: 120px;
@@ -77,8 +72,7 @@ body{
     border-radius: 4px;
     border-width: 2px;
     font-size: 16px;
-    line-height: 20px;
-    margin-bottom: 4px;
+    line-height: 10px;
     text-align: center;
     text-shadow: 1px 1px grey;
     color: #ffffff;
@@ -93,8 +87,7 @@ body{
     border-radius: 4px;
     border-width: 2px;
     font-size: 16px;
-    line-height: 20px;
-    margin-bottom: 4px;
+    line-height: 10px;
     text-align: center;
     text-shadow: 1px 1px grey;
     color: #ffffff;
