@@ -1,6 +1,6 @@
 {
   "name": "timetable-view",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "to view the unimelb timetable",
   "main": "server.js",
   "dependencies": {
@@ -14,6 +14,7 @@
     "morgan": "^1.7.0",
     "request": "^2.79.0"
   },
+  "license": "MIT",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
