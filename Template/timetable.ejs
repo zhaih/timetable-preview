@@ -241,38 +241,43 @@
 <body>
     <div class="row">
         <div id = "discription">
-            <div class="col-md-1"></div>
-            <div id = "logo" class="col-md-4">
+            <div class="col-md-1 col-xs-1"></div>
+            <div id = "logo" class="col-md-4 col-sm-4  col-xs-3">
                 <a href="" target=""></a>
             </div>
-            <div id="title" class="col-md-4">
+            <div id="title" class="col-md-4 col-sm-5 col-xs-8">
                 <h1>Timetable</h1>
                 <h3>Student × School</h3>
             </div>
         </div>
     </div>
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-8">
-            <div class="col-md-5">
-                <div id="courses"></div>
-            </div>
-            <div class="col-md-5">
-                <div id = "classSpec">
-                    <p>subjectCode: <span id = "subjectCode"></span></p>
-                    <p>Description: <span id = "desc"></span></p>
-                    <p>Location: <span id = "loc"></span></p>
+    <div class="row">
+        <div class="col-md-2 col-sm-2 col-xs-2"></div>
+        <div class="col-md-10 col-sm-10 col-xs-10">
+            <div class="row">
+                <div class="col-md-1 col-sm-1 col-xs-0">
+
                 </div>
+                <div class="col-md-5 col-sm-5 col-xs-6">
+                    <div id="courses"></div>
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-6">
+                    <div id = "classSpec">
+                        <p>subjectCode: <span id = "subjectCode"></span></p>
+                        <p>Description: <span id = "desc"></span></p>
+                        <p>Location: <span id = "loc"></span></p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-5"></div>
-            <div class="col-md-4">
-                    <button type = "button" name = "button" class="btn btn-default" id = "chooseButton">Choose</button>
-                    <button type = "button" name = "button" class="btn btn-default" id = "hideRedundent">Hide Redundent</button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-4 col-xs-3"></div>
+        <div class="col-md-5 col-sm-6 col-xs-6">
+                <button type = "button" name = "button" class="btn btn-default" id = "chooseButton">Choose</button>
+                <button type = "button" name = "button" class="btn btn-default" id = "hideRedundent">Hide Redundent</button>
         </div>
+    </div>
     <div class="col-md-12" style = "text-align : center;">
         <svg id = "timetable"></svg>
     </div>
