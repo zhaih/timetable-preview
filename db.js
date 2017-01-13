@@ -1,10 +1,22 @@
+<<<<<<< HEAD
 var MONGODB_URI = process.env.MONGODB_URI || 'mongodb://your_db';
+=======
+var MONGODB_URI = process.env.MONGODB_URI;
+>>>>>>> master
 var mongoose    = require('mongoose');
 var Schema      = mongoose.Schema;
 
+if (MONGODB_URI == undefined){
+    module.exports.useDB = false;
+}else{
+    module.exports.useDB = true;
+}
+
 // connect to mongodb
-mongoose.connect(MONGODB_URI)
-var db = mongoose.connection;
+if (MONGODB_URI != undefined){
+    mongoose.connect(MONGODB_URI)
+    var db = mongoose.connection;
+}
 
 // Schema for each class
 var classSchema = new Schema({

@@ -1,6 +1,6 @@
 {
   "name": "timetable-view",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "to view the unimelb timetable",
   "main": "server.js",
   "dependencies": {

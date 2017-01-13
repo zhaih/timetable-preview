@@ -18,9 +18,21 @@ function getRandomColor(){
 */
 function antiColor(cString){
     cString = cString.replace("#","")
-    var r = 255 - parseInt(cString.substring(0,2),16)
-    var g = 255 - parseInt(cString.substring(2,4),16)
-    var b = 255 - parseInt(cString.substring(4,6),16)
+    if (parseInt(cString.substring(0,2),16)>255/2){
+        var r = 0
+    }else{
+        r = 255
+    }
+    if (parseInt(cString.substring(2,4),16)>255/2){
+        var g = 0
+    }else{
+        g = 255
+    }
+    if (parseInt(cString.substring(4,6),16)>255/2){
+        var b = 0
+    }else{
+        b = 255
+    }
     var rc = r.toString(16)
     var gc = g.toString(16)
     var bc = b.toString(16)
