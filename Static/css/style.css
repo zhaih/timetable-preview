@@ -13,30 +13,32 @@ body{
 #title{
     text-align : center;
     font-family: "Times New Roman", Times, serif;
-	float: left;
+	margin-left:-0.3%;
 	color: #ffffff;
-	padding: 0px 40px 0px 180px;
+	margin-bottom:1%;
 }
 
 #courses{
 	font-weight: bold;
 	font-family: "Times New Roman", Times, serif;
-	margin-left: 30px;
-	padding: 7px 25px 10px 0;
+	/*float:right;
+	padding-right:1%;*/
 	text-align: left;
 	font-size: 15px;
+	margin-bottom: 1%;
+	/*margin-right:5%;*/
 }
 
 #classSpec{
-	margin-left:30px;
 	float: left;
 	text-align : left;
+	margin-bottom: 1%;
 	font-size: 14px;
-	padding-top: 20px;
 }
 
 #subjectCode{
 	font-size: 16px;
+	font-family: "Times New Roman", Times, serif;
 	font-weight: bold;
 }
 
@@ -44,6 +46,7 @@ body{
 	float: none;
 	position: inherit;
 	left: 25px;
+	margin-top:-1%;
 }
 
 #discription {
@@ -52,13 +55,14 @@ body{
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/uom-noswirl.jpg");
     background-repeat: no-repeat;
     background-position: 100% 0;
-    margin-bottom: 110px;
+    /*margin-bottom: 110px;*/
 }
 
 #logo a {
     position: absolute;
+    /*float:left;*/
     top: -10px;
-    left: 30px;
+    right: -100px;
     height: 120px;
     width: 120px;
     background-image: url("https://prod.ss.unimelb.edu.au/student/UMSystemImages/UMHeader/logo-sub.gif");
@@ -68,8 +72,6 @@ body{
 
 #chooseButton{
 	background: #33477D;
-	float: left;
-	left: 45px;
     width: auto;
     height: 30px;
     border-radius: 4px;
@@ -80,12 +82,12 @@ body{
     text-align: center;
     text-shadow: 1px 1px grey;
     color: #ffffff;
+    margin-left:5%;
+    margin-bottom: 1%;
 }
 
 #hideRedundent{
 	background: #33477D;
-	left:45px;
-	float:left;
     width: auto;
     height: 30px;
     border-radius: 4px;
@@ -96,4 +98,6 @@ body{
     text-align: center;
     text-shadow: 1px 1px grey;
     color: #ffffff;
+    margin-bottom: 1%;
+    margin-left:5%;
 }
