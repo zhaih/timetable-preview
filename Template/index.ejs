@@ -9,15 +9,16 @@
             var courseList
             var choosedCourse = new Object()
             $(document).ready(()=>{
-                // get set the year selector
+                // set the year selector
                 for (var i = new Date().getFullYear() - 1;
                  i <= new Date().getFullYear()+1; i++){
                     var year = document.createElement('option');
                     $(year)
                         .attr('value',i)
                         .html(i)
-                    $('#yearSelect').append(year);
+                    $('#yearSelect').append(year)
                 }
+                $('#yearSelect').val(new Date().getFullYear())
 
                 // get courses titles and fill it to the table
                 fetchCourses();
