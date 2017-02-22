@@ -4,7 +4,7 @@ var bodyParser  = require('body-parser');
 var path        = require('path');
 var app         = express();
 var server      = http.createServer(app);
-var PORT        = process.env.PORT || 80;
+var PORT        = process.env.PORT || 8888;
 var logger      = require('morgan');
 var fs          = require('fs');
 var scrapper    = require('./lib/scrapper');
@@ -22,18 +22,18 @@ app.use('/static',express.static('Static'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-if (useDB){
-    db.connect(function(err){
-        if (err){
+if (useDB) {
+    db.connect(function(err) {
+        if (err) {
             console.error(err);
             return;
         }
         db.allCourses((err,data)=>{
-            if (err){
+            if (err) {
                 console.error(err);
                 return;
             }
-            data.forEach(function(item){
+            data.forEach(item => {
                 classFiles[item.title] = item.classes;
             })
         })
@@ -41,62 +41,64 @@ if (useDB){
             console.log('server started at port:',app.get('port'));
         });
     });
-}else{
+} else {
     loadAllClassFiles();
-    app.listen(app.get('port'),function(){
+    app.listen(app.get('port'),function() {
         console.log('server started at port:',app.get('port'));
     });
 }
 
-
-app.get('/',function(req,res){
+app.get('/',function(req,res) {
     res.render('index');
 });
 
-app.get('/timetable',function(req,res){
+app.get('/timetable',function(req,res) {
     res.redirect('/');
 })
 
-app.get('/getCourseTitles',function(req,res){
+app.get('/getCourseTitles',function(req,res) {
     res.json(Object.keys(classFiles));
 })
 
-app.get('/getCourses',function(req,res){
+app.get('/getCourses',function(req,res) {
     res.json(classFiles);
 });
 
-app.post('/getCourses',function(req,res){
-    scrapeCourseInfo(req.body.subjectCode,req.body.year,function(err,courses){
-        if (err){
+app.post('/getCourses',function(req,res) {
+    scrapeCourseInfo(req.body.subjectCode,req.body.year,function(err,courses) {
+        if (err) {
             console.error(err);
             return;
         }
-        for (course in courses){
+        for (course in courses) {
             // use database to store info
             if (useDB){
                 db.insertOrUpdate(db.newEntry(course,courses[course]),(err,data)=>{
-                    if (err){
+                    if (err) {
                         console.error(err);
                         return;
                     }
                     classFiles[course] = data.classes;
+                    res.json(course);
                 });
             // use file system to store info
-            }else{
-                fs.writeFile(path.join(__dirname,'Timetable',course+'.json'),
-                            JSON.stringify(courses[course]).replace(/,/g,",\n"),(err)=>{
-                                if (err){
-                                    console.error(err);
-                                    return;
-                                }
-                                console.log('write file:',course+'.json','successed');
-                                classFiles[course] = courses[course];
-
-                            });
+            } else {
+                fs.writeFile(
+                    path.join(__dirname,'Timetable',course+'.json'),
+                    JSON.stringify(courses[course]).replace(/,/g,",\n"),
+                    err => {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        console.log('write file:',course+'.json','successed');
+                        classFiles[course] = courses[course];
+                        res.json(course);
+                    }
+                );
             }
         }
     });
-    res.end();
 });
 
 app.post('/timetable',function(req,res){
